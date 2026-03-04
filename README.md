@@ -1,5 +1,4 @@
 # Istoria — Web Board Game (GitHub Pages)
-https://zenodo.org/badge/1172924416.svg
 
 ## Περιεχόμενα
 - `index.html` — η κύρια σελίδα του παιχνιδιού
@@ -25,3 +24,4 @@ Custom HTML block:
   loading="lazy"
 ></iframe>
 ```
+<a href="https://doi.org/10.5281/zenodo.18868400"><img src="https://zenodo.org/badge/1172924416.svg" alt="DOI"></a>
