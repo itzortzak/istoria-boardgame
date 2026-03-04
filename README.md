@@ -1,4 +1,5 @@
 # Istoria — Web Board Game (GitHub Pages)
+https://zenodo.org/badge/1172924416.svg
 
 ## Περιεχόμενα
 - `index.html` — η κύρια σελίδα του παιχνιδιού
