@@ -24,4 +24,7 @@ Custom HTML block:
   loading="lazy"
 ></iframe>
 ```
-<a href="https://doi.org/10.5281/zenodo.18868400"><img src="https://zenodo.org/badge/1172924416.svg" alt="DOI"></a>
+
+
+## Σημείωση
+Το `cards.json` έχει αντικατασταθεί με ερωτήσεις που αντλήθηκαν από τα ZIP (01–04) και μετατράπηκαν σε μονοθεματικές κάρτες (Ορισμός / Σύντομη απάντηση / Σωστό-Λάθος / MCQ).
