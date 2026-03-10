@@ -92,6 +92,24 @@
   }
   button:disabled { opacity:.55; cursor:not-allowed; }
 
+  a.linkBtn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    background: rgba(247,242,234,0.85);
+    border: 1px solid rgba(10,37,64,0.22);
+    color: var(--navy);
+    border-radius: 12px;
+    padding: 9px 10px;
+    font-size: 13px;
+    outline:none;
+  }
+  a.linkBtn:hover {
+    background: rgba(14,165,233,0.08);
+  }
+
+
   .pill {
     display:inline-flex; align-items:center; gap:8px;
     padding: 6px 10px; border-radius: 999px;
@@ -224,10 +242,11 @@
       <div class="logo" aria-hidden="true"></div>
       <div>
         <h1>Ιστορία Νεότερου & Σύγχρονου Κόσμου — Web Board Game</h1>
-        <div class="sub">GitHub Pages · 350 κάρτες με επαληθευμένες σελίδες</div>
+        <div class="sub">Σύμφωνα με το σχολικό εγχειρίδιο: Κολιόπουλος, Ι., Σβολόπουλος, Κ., Χατζηβασιλείου, Ε., Νημάς, Θ., & Σχολινάκη-Χελιώτη, Χ. (2018). Ιστορία του νεότερου και του σύγχρονου κόσμου (από το 1815 έως σήμερα): Γ΄ τάξη Γενικού Λυκείου και Δ΄ τάξη Εσπερινού Λυκείου, Γενικής Παιδείας (Βιβλίο μαθητή). ΙΤΥΕ «Διόφαντος».</div>
       </div>
     </div>
     <div class="row">
+      <a class="linkBtn" href="instructions.html">Οδηγίες χρήσεως και κανόνες παιχνιδιού</a>
       <div class="pill" id="turnPill">Σειρά: —</div>
       <div class="pill">Ζάρι: <b id="dieValue">—</b></div>
       <div class="pill">Κάρτες: <b id="usedCount">0</b>/<b id="totalCount">—</b></div>
