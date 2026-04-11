@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ιστορία Νεότερου & Σύγχρονου Κόσμου — Web Board Game</title>
+<style>
+  :root {
+    --navy: #0a2540;
+    --paper: #f7f2ea;
+    --line: rgba(10,37,64,0.18);
+    --shadow: 0 10px 30px rgba(2,6,23,0.18);
+    --radius: 16px;
+    --accent: #0ea5e9;
+    --accent2: #c79a2b;
+    --good: #22c55e;
+    --bad: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: var(--navy);
+    background:
+      radial-gradient(1200px 700px at 20% 0%, rgba(14,165,233,0.18), transparent 60%),
+      radial-gradient(1000px 700px at 95% 15%, rgba(199,154,43,0.16), transparent 60%),
+      linear-gradient(180deg, var(--paper), #ffffff 70%);
+  }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(247,242,234,0.86);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar {
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding: 12px 16px;
+  }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .logo {
+    width: 36px; height: 36px; border-radius: 12px;
+    background: conic-gradient(from 180deg, var(--accent), var(--accent2), var(--accent));
+    box-shadow: 0 6px 18px rgba(2,6,23,0.14);
+  }
+  .brand h1 { font-size: 14px; margin: 0; letter-spacing: 0.2px; }
+  .brand .sub { margin-top: 2px; color: rgba(10,37,64,0.65); font-size: 12px; }
+
+  .wrap {
+    display:grid; grid-template-columns: 380px 1fr; gap: 14px; padding: 14px;
+  }
+  @media (max-width: 1100px) { .wrap { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: rgba(255,255,255,0.80);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .panel .hd {
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .panel .hd .t { font-weight: 900; font-size: 13px; letter-spacing: 0.2px; }
+  .panel .bd { padding: 12px; }
+
+  .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .grid { display:grid; gap:10px; }
+  label { font-size: 12px; color: rgba(10,37,64,0.70); }
+  select, button {
+    background: rgba(247,242,234,0.85);
+    border: 1px solid rgba(10,37,64,0.22);
+    color: var(--navy);
+    border-radius: 12px;
+    padding: 9px 10px;
+    font-size: 13px;
+    outline:none;
+  }
+  button { cursor:pointer; transition: transform .06s ease; }
+  button:active { transform: translateY(1px); }
+  button.primary {
+    border-color: rgba(14,165,233,0.45);
+    background: linear-gradient(180deg, rgba(14,165,233,0.18), rgba(14,165,233,0.08));
+  }
+  button.good {
+    border-color: rgba(34,197,94,0.45);
+    background: linear-gradient(180deg, rgba(34,197,94,0.16), rgba(34,197,94,0.07));
+  }
+  button.bad {
+    border-color: rgba(239,68,68,0.45);
+    background: linear-gradient(180deg, rgba(239,68,68,0.14), rgba(239,68,68,0.06));
+  }
+  button:disabled { opacity:.55; cursor:not-allowed; }
+
+  a.linkBtn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    background: rgba(247,242,234,0.85);
+    border: 1px solid rgba(10,37,64,0.22);
+    color: var(--navy);
+    border-radius: 12px;
+    padding: 9px 10px;
+    font-size: 13px;
+    outline:none;
+  }
+  a.linkBtn:hover {
+    background: rgba(14,165,233,0.08);
+  }
+
+
+  .pill {
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 6px 10px; border-radius: 999px;
+    border: 1px solid rgba(10,37,64,0.20);
+    background: rgba(247,242,234,0.70);
+    font-size: 12px;
+  }
+  .muted { color: rgba(10,37,64,0.65); }
+
+  .players { display:grid; gap:8px; }
+  .player {
+    border: 1px solid rgba(10,37,64,0.16);
+    border-radius: 14px;
+    background: rgba(247,242,234,0.50);
+    padding: 10px;
+    display:flex; gap:10px; align-items:center;
+  }
+  .player.active { outline: 2px solid rgba(14,165,233,0.40); background: rgba(14,165,233,0.06); }
+  .avatar {
+    width: 42px; height: 42px; border-radius: 16px;
+    display:grid; place-items:center;
+    color:white; font-weight:900;
+    box-shadow: 0 10px 18px rgba(2,6,23,0.14);
+  }
+  .player .name { font-weight:900; font-size: 13px; line-height:1.1; }
+  .player .era { font-size:12px; color: rgba(10,37,64,0.65); margin-top:2px; }
+  .player .score { margin-left:auto; font-size:12px; text-align:right; }
+
+  .boardGrid {
+    display:grid;
+    grid-template-columns: repeat(10, minmax(54px, 1fr));
+    gap: 10px;
+  }
+  @media (max-width: 900px) { .boardGrid { grid-template-columns: repeat(5, minmax(54px, 1fr)); } }
+  .sq {
+    position:relative;
+    min-height: 66px;
+    border-radius: 16px;
+    border: 1px solid rgba(10,37,64,0.18);
+    background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(247,242,234,0.70));
+    overflow:hidden;
+  }
+  .sq.start {
+    border-color: rgba(34,197,94,0.45);
+    background: linear-gradient(180deg, rgba(34,197,94,0.13), rgba(247,242,234,0.80));
+  }
+  .sq.question { border-color: rgba(14,165,233,0.35); }
+  .sq.event { border-color: rgba(199,154,43,0.35); }
+  .sq .n { position:absolute; top:8px; left:10px; font-size:11px; color: rgba(10,37,64,0.55); font-weight:800; }
+  .sq .tag { position:absolute; left:10px; right:10px; top:26px; font-size:11px; color: rgba(10,37,64,0.82); }
+  .tokens {
+    position:absolute; left:10px; bottom:10px;
+    display:flex; flex-wrap:wrap; gap:5px;
+  }
+  .token {
+    width:18px; height:18px; border-radius:8px;
+    border: 1px solid rgba(255,255,255,0.55);
+    box-shadow: 0 8px 16px rgba(2,6,23,0.12);
+    display:grid; place-items:center;
+    font-size:10px; font-weight:900;
+    color: rgba(255,255,255,0.95);
+  }
+
+  .log {
+    max-height: 220px; overflow:auto;
+    border-top: 1px solid var(--line);
+    padding-top: 10px; margin-top:10px;
+  }
+  .logItem { font-size: 12px; color: rgba(10,37,64,0.82); margin: 6px 0; }
+
+  dialog {
+    border: 1px solid rgba(10,37,64,0.22);
+    border-radius: 18px;
+    box-shadow: 0 24px 70px rgba(2,6,23,0.30);
+    width: min(860px, calc(100vw - 26px));
+    padding: 0;
+    overflow:hidden;
+  }
+  dialog::backdrop { background: rgba(2,6,23,0.60); }
+  .modalHero { height: 140px; background:#000; position:relative; }
+  .modalHero img { width:100%; height:100%; object-fit:cover; filter: saturate(1.05) contrast(1.05); }
+  .modalHero::after {
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(90deg, rgba(10,37,64,0.85), rgba(10,37,64,0.20), rgba(10,37,64,0.75));
+  }
+  .modalTop {
+    position:absolute; left:14px; right:14px; bottom:12px;
+    display:flex; align-items:flex-end; justify-content:space-between; gap:10px;
+    color:white;
+  }
+  .badge {
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 6px 10px; border-radius:999px;
+    border: 1px solid rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.10);
+    font-size: 12px;
+    backdrop-filter: blur(6px);
+  }
+  .badge .dot { width:8px; height:8px; border-radius:999px; background: var(--accent); }
+  .modal { background: var(--paper); color: var(--navy); padding: 14px; }
+  .modal h2 { margin:0; font-size:16px; }
+  .meta { color: rgba(10,37,64,0.70); font-size:12px; margin-top:4px; }
+  .qa {
+    margin-top:12px;
+    border: 1px solid rgba(10,37,64,0.18);
+    border-radius: 16px;
+    background:white;
+    overflow:hidden;
+  }
+  .qa .q { padding: 12px; font-size:14px; line-height:1.5; }
+  .qa .a {
+    border-top: 1px dashed rgba(10,37,64,0.20);
+    padding: 12px;
+    display:none;
+    background: rgba(247,242,234,0.75);
+  }
+  .qa .a.show { display:block; }
+  .qa .a .label { font-weight: 900; margin-bottom:6px; }
+  .modalActions {
+    display:flex; justify-content:space-between; gap:8px;
+    margin-top:12px; flex-wrap:wrap;
+  }
+  .hint { font-size:12px; color: rgba(10,37,64,0.65); margin-top:8px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Ιστορία Νεότερου & Σύγχρονου Κόσμου — Web Board Game</h1>
+        <div class="sub">Σύμφωνα με το σχολικό εγχειρίδιο: Κολιόπουλος, Ι., Σβολόπουλος, Κ., Χατζηβασιλείου, Ε., Νημάς, Θ., & Σχολινάκη-Χελιώτη, Χ. (2018). Ιστορία του νεότερου και του σύγχρονου κόσμου (από το 1815 έως σήμερα): Γ΄ τάξη Γενικού Λυκείου και Δ΄ τάξη Εσπερινού Λυκείου, Γενικής Παιδείας (Βιβλίο μαθητή). ΙΤΥΕ «Διόφαντος».</div>
+      </div>
+    </div>
+    <div class="row">
+      <a class="linkBtn" href="instructions.html">Οδηγίες και κανόνες παιχνιδιού</a>
+      <div class="pill" id="turnPill">Σειρά: —</div>
+      <div class="pill">Ζάρι: <b id="dieValue">—</b></div>
+      <div class="pill">Κάρτες: <b id="usedCount">0</b>/<b id="totalCount">—</b></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="panel">
+    <div class="hd"><div class="t">Πίνακας Ελέγχου</div></div>
+    <div class="bd">
+      <div class="grid">
+        <div class="row">
+          <label for="mode">Κάρτες</label>
+          <select id="mode">
+            <option value="bySquare">Ανά κεφάλαιο (ανά τετράγωνο)</option>
+            <option value="randomAll">Τυχαία από όλες</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label for="playersCount">Παίκτες</label>
+          <select id="playersCount">
+            <option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option><option>6</option>
+          </select>
+          <button id="newGame" class="primary">Νέο παιχνίδι</button>
+          <button id="resetPos">Reset</button>
+        </div>
+
+        <div class="row">
+          <label for="chapterFilter">Φίλτρο</label>
+          <select id="chapterFilter">
+            <option value="ALL" selected>Όλα</option>
+            <option value="A">Κεφ. Α΄</option>
+            <option value="B">Κεφ. Β΄</option>
+            <option value="C">Κεφ. Γ΄</option>
+            <option value="Δ">Κεφ. Δ΄</option>
+            <option value="Ε">Κεφ. Ε΄</option>
+            <option value="ΣΤ">Κεφ. ΣΤ΄</option>
+            <option value="Ζ">Κεφ. Ζ΄</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <button id="roll" class="primary" disabled>Ρίξε ζάρι</button>
+          <button id="endTurn" disabled>Τέλος σειράς</button>
+        </div>
+
+        <div class="hint">Ροή: «Δείξε απάντηση» → «Σωστό/Λάθος». Σωστό: +1. Λάθος: -1 (ελάχιστο 0).</div>
+
+        <div>
+          <div class="t" style="font-weight:900; margin: 10px 0 8px 0;">Παίκτες</div>
+          <div class="players" id="players"></div>
+        </div>
+
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="panel">
+    <div class="hd"><div class="t">Ταμπλό</div><div class="pill"><span class="muted">Σύσταση:</span> 15–20 γύροι</div></div>
+    <div class="bd"><div class="boardGrid" id="board"></div></div>
+  </main>
+</div>
+
+<dialog id="cardDialog">
+  <div class="modalHero">
+    <img id="cardImg" alt="Εικόνα από το σχολικό βιβλίο" />
+    <div class="modalTop">
+      <div class="badge"><span class="dot" id="badgeDot"></span><span id="badgeText">Κάρτα</span></div>
+      <div class="badge"><span style="opacity:.85">Σελίδα:</span> <b id="cardPage">—</b></div>
+    </div>
+  </div>
+  <div class="modal">
+    <h2 id="cardTitle">Κάρτα</h2>
+    <div class="meta" id="cardMeta"></div>
+
+    <div class="qa">
+      <div class="q" id="cardQ"></div>
+      <div class="a" id="cardA">
+        <div class="label">Απάντηση</div>
+        <div id="cardAText"></div>
+      </div>
+    </div>
+
+    <div class="modalActions">
+      <div class="row">
+        <button id="showAnswer" class="primary">Δείξε απάντηση</button>
+        <button id="closeCard">Κλείσιμο</button>
+      </div>
+      <div class="row">
+        <button id="markCorrect" class="good" disabled>Σωστό (+1)</button>
+        <button id="markWrong" class="bad" disabled>Λάθος (-1)</button>
+      </div>
+    </div>
+
+    <div class="hint">Οι κάρτες φορτώνονται από <b>cards.json</b>. Οι εικόνες είναι στο <b>assets/</b>.</div>
+  </div>
+</dialog>
+
+<script>
+const FIGURES = [{"id": "venizelos", "name": "Ελευθ. Βενιζέλος", "era": "Ελλάδα/Μεσοπόλεμος", "color": "#0ea5e9"}, {"id": "bismarck", "name": "Όττο φον Μπίσμαρκ", "era": "19ος αι.", "color": "#22c55e"}, {"id": "wilson", "name": "Γούντροου Ουίλσον", "era": "Α΄ ΠΠ", "color": "#8b5cf6"}, {"id": "roosevelt", "name": "Φρ. Ντ. Ρούζβελτ", "era": "Β΄ ΠΠ", "color": "#f97316"}, {"id": "mussolini", "name": "Μπενίτο Μουσολίνι", "era": "Μεσοπόλεμος", "color": "#ec4899"}, {"id": "gorbachev", "name": "Μιχαήλ Γκορμπατσόφ", "era": "Τέλος Ψυχρού Πολέμου", "color": "#94a3b8"}];
+const CHAPTER_IMG = {"A": "assets/chapter_A.jpg", "B": "assets/chapter_B.jpg", "C": "assets/chapter_C.jpg", "Δ": "assets/chapter_Δ.jpg", "Ε": "assets/chapter_Ε.jpg", "ΣΤ": "assets/chapter_ΣΤ.jpg", "Ζ": "assets/chapter_Ζ.jpg"};
+const CHAPTER_LABEL = {
+  "A":"Κεφάλαιο Α΄","B":"Κεφάλαιο Β΄","C":"Κεφάλαιο Γ΄","Δ":"Κεφάλαιο Δ΄","Ε":"Κεφάλαιο Ε΄","ΣΤ":"Κεφάλαιο ΣΤ΄","Ζ":"Κεφάλαιο Ζ΄"
+};
+const CHAPTER_COLOR = {
+  "A":"#0ea5e9","B":"#22c55e","C":"#8b5cf6","Δ":"#c79a2b","Ε":"#f97316","ΣΤ":"#64748b","Ζ":"#0f766e"
+};
+
+const SQUARES = Array.from({length: 40}, (_, i) => {
+  if (i === 0) return {i, kind:"start", label:"START"};
+  const chapter =
+      (i>=1 && i<=6) ? "A" :
+      (i>=7 && i<=12) ? "B" :
+      (i>=13 && i<=18) ? "C" :
+      (i>=19 && i<=24) ? "Δ" :
+      (i>=25 && i<=30) ? "Ε" :
+      (i>=31 && i<=35) ? "ΣΤ" :
+      "Ζ";
+  const kind = (i % 5 === 0) ? "event" : "question";
+  const label = (kind === "question") ? `Ερώτηση (${chapter})` : `Γεγονός (${chapter})`;
+  return {i, kind, chapter, label};
+});
+
+let CARDS = [];
+let state = {
+  players: [],
+  turn: 0,
+  die: null,
+  rolled: false,
+  usedCards: []
+};
+
+function byId(id) { return document.getElementById(id); }
+
+function save() { localStorage.setItem("historia_board_state_pages_pkg", JSON.stringify(state)); }
+function load() {
+  try {
+    const raw = localStorage.getItem("historia_board_state_pages_pkg");
+    if (!raw) return false;
+    state = JSON.parse(raw);
+    return true;
+  } catch (e) { return false; }
+}
+
+function log(msg) {
+  const el = byId("log");
+  const div = document.createElement("div");
+  div.className = "logItem";
+  div.innerHTML = msg;
+  el.prepend(div);
+}
+
+function buildBoard() {
+  const board = byId("board");
+  board.innerHTML = "";
+  for (const s of SQUARES) {
+    const d = document.createElement("div");
+    d.className = "sq " + (s.kind || "");
+    if (s.kind === "start") d.classList.add("start");
+    d.innerHTML = `
+      <div class="n">#${s.i}</div>
+      <div class="tag">${s.label}</div>
+      <div class="tokens" id="tokens-${s.i}"></div>
+    `;
+    board.appendChild(d);
+  }
+}
+
+function renderTokens() {
+  for (let i=0;i<SQUARES.length;i++) {
+    const wrap = byId(`tokens-${i}`);
+    if (wrap) wrap.innerHTML = "";
+  }
+  state.players.forEach((p) => {
+    const wrap = byId(`tokens-${p.pos}`);
+    if (!wrap) return;
+    const t = document.createElement("div");
+    t.className = "token";
+    t.style.background = p.color;
+    t.textContent = p.short;
+    t.title = `${p.name} (πόντοι: ${p.score})`;
+    wrap.appendChild(t);
+  });
+}
+
+function renderPlayers() {
+  const box = byId("players");
+  box.innerHTML = "";
+  state.players.forEach((p, idx) => {
+    const div = document.createElement("div");
+    div.className = "player" + (idx === state.turn ? " active" : "");
+    div.innerHTML = `
+      <div class="avatar" style="background:${p.color}">${p.short}</div>
+      <div>
+        <div class="name">${p.name}</div>
+        <div class="era">${p.era}</div>
+      </div>
+      <div class="score">
+        <div><b>${p.score}</b> πόντοι</div>
+        <div class="muted">θέση #${p.pos}</div>
+      </div>
+    `;
+    box.appendChild(div);
+  });
+}
+
+function setTurnUI() {
+  const p = state.players[state.turn];
+  byId("turnPill").textContent = p ? `Σειρά: ${p.name}` : "Σειρά: —";
+  byId("dieValue").textContent = state.die ?? "—";
+  byId("usedCount").textContent = (state.usedCards?.length || 0).toString();
+  byId("totalCount").textContent = (CARDS.length || 0).toString();
+
+  byId("roll").disabled = !p || state.rolled || !CARDS.length;
+  byId("endTurn").disabled = !p;
+  renderPlayers();
+}
+
+function newGame() {
+  const count = parseInt(byId("playersCount").value, 10);
+  const shortMap = {
+    "Βενιζέλος":"Β","Μπίσμαρκ":"Μπ","Ουίλσον":"Ο","Ρούζβελτ":"Ρ","Μουσολίνι":"Μ","Γκορμπατσόφ":"Γ"
+  };
+  state.players = FIGURES.slice(0, count).map((f) => {
+    const last = f.name.split(" ").slice(-1)[0];
+    const short = (shortMap[last] || last.substring(0,2)).substring(0,2);
+    return { id:f.id, name:f.name, era:f.era, color:f.color, short, pos:0, score:0 };
+  });
+  state.turn = 0;
+  state.die = null;
+  state.rolled = false;
+  state.usedCards = [];
+  save();
+  renderTokens(); renderPlayers(); setTurnUI();
+  log(`<span class="muted">Νέο παιχνίδι:</span> ${count} παίκτες.`);
+}
+
+function resetPositions() {
+  state.players.forEach(p => { p.pos = 0; p.score = 0; });
+  state.turn = 0;
+  state.die = null;
+  state.rolled = false;
+  state.usedCards = [];
+  save();
+  renderTokens(); renderPlayers(); setTurnUI();
+  log(`<span class="muted">Reset:</span> όλοι στο START (πόντοι 0).`);
+}
+
+function endTurn() {
+  state.turn = (state.turn + 1) % state.players.length;
+  state.rolled = false;
+  state.die = null;
+  save();
+  setTurnUI();
+}
+
+function rollDie() {
+  const die = Math.floor(Math.random()*6) + 1;
+  state.die = die;
+  state.rolled = true;
+
+  const p = state.players[state.turn];
+  const from = p.pos;
+  p.pos = (p.pos + die) % SQUARES.length;
+
+  save();
+  renderTokens(); setTurnUI();
+  log(`<b>${p.name}</b> έριξε <b>${die}</b> και πήγε από #${from} → #${p.pos}.`);
+
+  const sq = SQUARES[p.pos];
+  if (sq.kind === "question") openCard(sq.chapter, "Ερώτηση");
+  if (sq.kind === "event") openCard(sq.chapter, "Γεγονός");
+}
+
+function pickCard(chapter) {
+  const chapterFilter = byId("chapterFilter").value;
+  const mode = byId("mode").value;
+
+  let pool = CARDS;
+  // Το ρητό φίλτρο κεφαλαίου υπερισχύει του ταμπλό.
+  if (chapterFilter !== "ALL") {
+    pool = pool.filter(c => c.prefix === chapterFilter);
+  } else if (mode === "bySquare") {
+    pool = pool.filter(c => c.prefix === chapter);
+  }
+
+  // ασφαλιστική δικλείδα
+  if (!pool.length) {
+    pool = CARDS;
+  }
+
+  const used = new Set(state.usedCards || []);
+  const unused = pool.filter(c => !used.has(c.code));
+  const chosenPool = (unused.length ? unused : pool);
+  const chosen = chosenPool[Math.floor(Math.random() * chosenPool.length)];
+
+  if (!chosen) return null;
+
+  state.usedCards = state.usedCards || [];
+  if (!state.usedCards.includes(chosen.code)) {
+    state.usedCards.push(chosen.code);
+    if (state.usedCards.length > 400) state.usedCards = state.usedCards.slice(-400);
+  }
+  save();
+  return chosen;
+}
+
+function openCard(chapter, kind) {
+  const card = pickCard(chapter);
+  if (!card) return;
+  const dlg = byId("cardDialog");
+
+  byId("cardImg").src = CHAPTER_IMG[card.prefix] || "";
+  byId("badgeText").textContent = `${kind} · ${CHAPTER_LABEL[card.prefix] || card.prefix}`;
+  byId("badgeDot").style.background = CHAPTER_COLOR[card.prefix] || "#0ea5e9";
+  byId("cardPage").textContent = card.page || "—";
+
+  byId("cardTitle").textContent = `${card.code} — ${card.type}`;
+  byId("cardMeta").textContent = `${CHAPTER_LABEL[card.prefix] || card.prefix} · σελ. ${card.page}`;
+  byId("cardQ").textContent = card.q;
+
+  const aWrap = byId("cardA");
+  aWrap.classList.remove("show");
+  byId("cardAText").textContent = card.a;
+
+  byId("markCorrect").disabled = true;
+  byId("markWrong").disabled = true;
+
+  dlg.showModal();
+}
+
+function enableMarking() {
+  byId("markCorrect").disabled = false;
+  byId("markWrong").disabled = false;
+}
+
+function applyResult(isCorrect) {
+  const p = state.players[state.turn];
+  if (!p) return;
+  if (isCorrect) {
+    p.score += 1;
+    log(`<b>${p.name}</b>: <span style="color:var(--good); font-weight:900;">Σωστό</span> (+1).`);
+  } else {
+    p.score = Math.max(0, p.score - 1);
+    log(`<b>${p.name}</b>: <span style="color:var(--bad); font-weight:900;">Λάθος</span> (-1).`);
+  }
+  save();
+  renderPlayers(); setTurnUI();
+}
+
+byId("showAnswer").addEventListener("click", () => {
+  byId("cardA").classList.add("show");
+  enableMarking();
+});
+byId("closeCard").addEventListener("click", () => byId("cardDialog").close());
+byId("markCorrect").addEventListener("click", () => applyResult(true));
+byId("markWrong").addEventListener("click", () => applyResult(false));
+
+byId("newGame").addEventListener("click", newGame);
+byId("resetPos").addEventListener("click", resetPositions);
+byId("roll").addEventListener("click", rollDie);
+byId("endTurn").addEventListener("click", endTurn);
+
+(async function init() {
+  buildBoard();
+  load();
+  try {
+    const res = await fetch("./cards.json", { cache: "no-store" });
+    CARDS = await res.json();
+  } catch (e) {
+    CARDS = [];
+    log(`<span class="muted">Σφάλμα:</span> δεν φόρτωσαν οι κάρτες. Βεβαιώσου ότι υπάρχει το αρχείο <b>cards.json</b>.`);
+  }
+  if (!state.players || !state.players.length) newGame();
+  renderTokens(); renderPlayers(); setTurnUI();
+  byId("roll").disabled = !CARDS.length;
+})();
+</script>
+</body>
+</html>
