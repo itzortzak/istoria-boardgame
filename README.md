@@ -1,8 +1,8 @@
-# Istoria Board Game — Validated v13
+# Istoria Board Game — Validated v14
 
-Η έκδοση v13 δεν μεταβάλλει το card count ούτε το validated περιεχόμενο του `cards.json`. Επικεντρώνεται αποκλειστικά στη σταθεροποίηση της φόρτωσης των εικόνων των κεφαλαίων Δ΄, Ε΄, ΣΤ΄, Ζ΄.
+Η έκδοση v14 δεν μεταβάλλει το card count ούτε το validated περιεχόμενο του `cards.json`. Επικεντρώνεται αποκλειστικά στη σταθεροποίηση της φόρτωσης των εικόνων των κεφαλαίων Δ΄, Ε΄, ΣΤ΄, Ζ΄.
 
-## Τι βελτιώθηκε στη v13
+## Τι βελτιώθηκε στη v14
 
 - Οι εικόνες των κεφαλαίων Δ΄, Ε΄, ΣΤ΄, Ζ΄ απέκτησαν ASCII-safe filenames (`chapter_D.jpg`, `chapter_E.jpg`, `chapter_ST.jpg`, `chapter_Z.jpg`).
 - Ο μηχανισμός φόρτωσης εικόνας χρησιμοποιεί πλέον fallback σε legacy Greek filenames, ώστε να λειτουργεί και σε μερικά παλαιότερα deployments.
@@ -19,8 +19,8 @@
 
 ## Περιεχόμενα
 
-- `cards.json` -> validated dataset v13 (bit-identical με το v12 dataset)
-- `index.html` -> app bundle v13 με διορθωμένη φόρτωση εικόνων κεφαλαίων
+- `cards.json` -> validated dataset v14 (bit-identical με το v12 dataset)
+- `index.html` -> app bundle v14 με διορθωμένη φόρτωση εικόνων κεφαλαίων
 - `app.js` -> ενημερωμένος image-loader/fallback μηχανισμός
 - `instructions.html` -> ενημερωμένοι κανόνες χρήσης v13
 - `assets/` -> εικόνες κεφαλαίων, μαζί με ASCII-safe aliases για Δ΄, Ε΄, ΣΤ΄, Ζ΄
